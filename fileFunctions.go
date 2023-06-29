@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func createFile(fileName, path string) {
+func CreateFile(fileName, path string) {
 	if _, pathErr := os.Stat(path); pathErr != nil {
 		if os.IsNotExist(pathErr) {
 			fmt.Print(pathErr)
