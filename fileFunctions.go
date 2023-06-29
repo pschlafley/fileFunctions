@@ -8,11 +8,11 @@ import (
 func CreateFile(fileName, path string) {
 	if _, pathErr := os.Stat(path); pathErr != nil {
 		if os.IsNotExist(pathErr) {
-			fmt.Print(pathErr)
 			os.Mkdir(path, 0700)
-		} else {
 			fmt.Print(pathErr)
+		} else {
 			os.Chmod(path, 0700)
+			fmt.Print(pathErr)
 		}
 	}
 
