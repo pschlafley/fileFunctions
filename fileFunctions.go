@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func writeFile(fileName, path string) {
+func WriteFile(fileName, path string) {
 	files, err := os.ReadDir(path)
 
 	if files != nil {
