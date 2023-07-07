@@ -8,15 +8,19 @@ import (
 )
 
 func FindFile(fileName, path string) {
-	root := "/Users/peyton.schlafley/Code"
-	var fileSystem fs.FS = os.DirFS(root)
+	//root := "/Users/peyton.schlafley/Code/go-repos/go_terminal"
+	var fileSystem fs.FS = os.DirFS(path)
 
 	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			log.Fatal(err)
 		}
 		fmt.Println(path)
-		fmt.Printf("Type: %v", d.IsDir())
+
+		if d.Name() == fileName {
+			fmt.Printf("Found the file named: %v \n Path: %v", fileName, path)
+		}
+
 		return nil
 	})
 }
