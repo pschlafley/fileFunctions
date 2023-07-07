@@ -2,11 +2,25 @@ package fileFunctions
 
 import (
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 )
 
-func WriteFile(fileName, path string) {
+func FindFile(fileName, path string) {
+	root := "/Users/peyton.schlafley/"
+	var fileSystem fs.FS = os.DirFS(root)
+
+	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(path)
+		return nil
+	})
+}
+
+func EditFile(fileName, path string) {
 	files, err := os.ReadDir(path)
 
 	if files != nil {
