@@ -8,7 +8,7 @@ import (
 )
 
 func FindFile(fileName, path string) {
-	root := "/Users/peyton.schlafley/"
+	root := "/Users/peyton.schlafley/Code"
 	var fileSystem fs.FS = os.DirFS(root)
 
 	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
