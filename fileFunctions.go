@@ -16,6 +16,7 @@ func FindFile(fileName, path string) {
 			log.Fatal(err)
 		}
 		fmt.Println(path)
+		fmt.Printf("Type: %v", d.IsDir())
 		return nil
 	})
 }
