@@ -1,4 +1,4 @@
-package main
+package fileFunctions
 
 import (
 	"fmt"
@@ -7,69 +7,37 @@ import (
 	"os"
 )
 
-func main() {
-	FindFile2("text.txt", ".")
-}
-
-func FindFile2(fileName, path string) {
+func FindFile(fileName, path string) (bool, string, string) {
 	//root := "/Users/peyton.schlafley/Code/go-repos/go_terminal"
 	var fileSystem fs.FS = os.DirFS(path)
+	var fileWasFound bool
 
-	var data []fs.DirEntry
+	var data []string
 
 	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		data = append(data, d)
+		data = append(data, d.Name())
 
 		return nil
 	})
 
 	for i := 0; i < len(data); i++ {
-		if data[i].Name() == fileName {
-			fmt.Printf("fileName: %v \n data[i]: %v", fileName, data[i].Name())
-		} else if data[i].Name() != fileName {
-			fmt.Printf("fileName not found")
-		}
-	}
-}
-
-func FindFile(fileName, path string) (string, string) {
-	//root := "/Users/peyton.schlafley/Code/go-repos/go_terminal"
-	var fileSystem fs.FS = os.DirFS(path)
-
-	var data []fs.DirEntry
-
-	var fileWasFound bool
-
-	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		data = append(data, d)
-
-		if d.Name() == fileName {
-			fmt.Printf("Found the file named: %v \n Path: %v", fileName, path)
+		if data[i] == fileName {
 			fileWasFound = true
-		} else {
-			fmt.Printf("The file: %v was not found in this path: %v", fileName, path)
+		} else if data[i] != fileName {
 			fileWasFound = false
 		}
-
-		return nil
-	})
-
-	print(data)
-
-	if fileWasFound {
-		return fileName, path
-	} else {
-		return fmt.Sprintf("FileName: %v was not found", fileName), ""
 	}
 
+	if fileWasFound {
+		fmt.Printf("file found!\n FileName: %v \n Path: %v \n", fileName, path)
+	} else if !fileWasFound {
+		fmt.Printf("The file: (%v) was not found in the given directory (%v) \n", fileName, path)
+	}
+	return fileWasFound, fileName, path
 }
 
 func EditFile(fileName, path string) {
