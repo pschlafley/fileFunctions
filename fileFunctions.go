@@ -7,22 +7,37 @@ import (
 	"os"
 )
 
-func FindFile(fileName, path string) {
+func FindFile(fileName, path string) (bool, string, string) {
 	//root := "/Users/peyton.schlafley/Code/go-repos/go_terminal"
 	var fileSystem fs.FS = os.DirFS(path)
+	var fileWasFound bool
+
+	var data []string
 
 	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(path)
 
-		if d.Name() == fileName {
-			fmt.Printf("Found the file named: %v \n Path: %v", fileName, path)
-		}
+		data = append(data, d.Name())
 
 		return nil
 	})
+
+	for i := 0; i < len(data); i++ {
+		if data[i] == fileName {
+			fileWasFound = true
+		} else if data[i] != fileName {
+			fileWasFound = false
+		}
+	}
+
+	if fileWasFound {
+		fmt.Printf("file found!\n FileName: %v \n Path: %v \n", fileName, path)
+	} else if !fileWasFound {
+		fmt.Printf("The file: (%v) was not found in the given directory (%v) \n", fileName, path)
+	}
+	return fileWasFound, fileName, path
 }
 
 func EditFile(fileName, path string) {
