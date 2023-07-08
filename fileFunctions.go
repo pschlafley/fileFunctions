@@ -1,4 +1,4 @@
-package fileFunctions
+package main
 
 import (
 	"fmt"
@@ -6,6 +6,14 @@ import (
 	"log"
 	"os"
 )
+
+func main() {
+	fileWasFound, fileName, path := FindFile("casey.txt", "./test")
+
+	if !fileWasFound {
+		CreateFile(fileName, path)
+	}
+}
 
 func FindFile(fileName, path string) (bool, string, string) {
 	//root := "/Users/peyton.schlafley/Code/go-repos/go_terminal"
@@ -56,10 +64,8 @@ func CreateFile(fileName, path string) {
 			os.Mkdir(path, 0700)
 			os.Create(path + "/" + fileName)
 			fmt.Printf("Error: %s\n Creating it now...", pathErr)
-		} else {
-			os.Chmod(path, 0700)
-			os.Create(path + "/" + fileName)
-			fmt.Print(pathErr)
 		}
 	}
+	os.Chmod(path, 0700)
+	os.Create(path + "/" + fileName)
 }
