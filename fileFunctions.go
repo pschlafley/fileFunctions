@@ -5,26 +5,34 @@ import (
 	"io/fs"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
-	fileWasFound, fileName, path := FindFile("casey.txt", "./test")
+	fileWasFound, fileName, path, errors := FindFile("casey.txt", "./test")
 
-	if !fileWasFound {
+	if errors != nil {
+		CreateDirectory(path)
+	} else if !fileWasFound {
 		CreateFile(fileName, path)
 	}
+
 }
 
-func FindFile(fileName, path string) (bool, string, string) {
-	//root := "/Users/peyton.schlafley/Code/go-repos/go_terminal"
+func FindFile(fileName, path string) (bool, string, string, []string) {
 	var fileSystem fs.FS = os.DirFS(path)
 	var fileWasFound bool
 
 	var data []string
+	var errors []string
 
 	fs.WalkDir(fileSystem, ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
-			log.Fatal(err)
+			_, after, _ := strings.Cut(err.Error(), ".:")
+
+			errors = append(errors, after)
+
+			return nil
 		}
 
 		data = append(data, d.Name())
@@ -45,7 +53,7 @@ func FindFile(fileName, path string) (bool, string, string) {
 	} else if !fileWasFound {
 		fmt.Printf("The file: (%v) was not found in the given directory (%v) \n", fileName, path)
 	}
-	return fileWasFound, fileName, path
+	return fileWasFound, fileName, path, errors
 }
 
 func EditFile(fileName, path string) {
@@ -61,11 +69,20 @@ func EditFile(fileName, path string) {
 func CreateFile(fileName, path string) {
 	if _, pathErr := os.Stat(path); pathErr != nil {
 		if os.IsNotExist(pathErr) {
-			os.Mkdir(path, 0700)
+			CreateDirectory(path)
 			os.Create(path + "/" + fileName)
 			fmt.Printf("Error: %s\n Creating it now...", pathErr)
 		}
+	} else {
+		os.Chmod(path, 0700)
+		os.Create(path + "/" + fileName)
 	}
-	os.Chmod(path, 0700)
-	os.Create(path + "/" + fileName)
+}
+
+func CreateDirectory(path string) {
+	if _, pathErr := os.Stat(path); pathErr != nil {
+		if os.IsNotExist(pathErr) {
+			os.Mkdir(path, 0700)
+		}
+	}
 }
