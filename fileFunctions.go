@@ -56,10 +56,8 @@ func CreateFile(fileName, path string) {
 			os.Mkdir(path, 0700)
 			os.Create(path + "/" + fileName)
 			fmt.Printf("Error: %s\n Creating it now...", pathErr)
-		} else {
-			os.Chmod(path, 0700)
-			os.Create(path + "/" + fileName)
-			fmt.Print(pathErr)
 		}
 	}
+	os.Chmod(path, 0700)
+	os.Create(path + "/" + fileName)
 }
