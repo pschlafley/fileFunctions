@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	fileWasFound, fileName, path, errors := FindFile("casey.txt", "./test")
+	fileWasFound, fileName, path, errors := FindFile("test.txt", "./test")
 
 	if errors != nil {
 		CreateDirectory(path)
@@ -48,11 +48,6 @@ func FindFile(fileName, path string) (bool, string, string, []string) {
 		}
 	}
 
-	if fileWasFound {
-		fmt.Printf("file found!\n FileName: %v \n Path: %v \n", fileName, path)
-	} else if !fileWasFound {
-		fmt.Printf("The file: (%v) was not found in the given directory (%v) \n", fileName, path)
-	}
 	return fileWasFound, fileName, path, errors
 }
 
@@ -69,9 +64,7 @@ func EditFile(fileName, path string) {
 func CreateFile(fileName, path string) {
 	if _, pathErr := os.Stat(path); pathErr != nil {
 		if os.IsNotExist(pathErr) {
-			CreateDirectory(path)
-			os.Create(path + "/" + fileName)
-			fmt.Printf("Error: %s\n Creating it now...", pathErr)
+			fmt.Printf("Error: %s", pathErr)
 		}
 	} else {
 		os.Chmod(path, 0700)
@@ -82,6 +75,7 @@ func CreateFile(fileName, path string) {
 func CreateDirectory(path string) {
 	if _, pathErr := os.Stat(path); pathErr != nil {
 		if os.IsNotExist(pathErr) {
+			fmt.Printf("Error: %s", pathErr)
 			os.Mkdir(path, 0700)
 		}
 	}
