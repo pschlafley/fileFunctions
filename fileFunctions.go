@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -16,7 +15,6 @@ func main() {
 	} else if !fileWasFound {
 		CreateFile(fileName, path)
 	}
-
 }
 
 func FindFile(fileName, path string) (bool, string, string, []string) {
@@ -61,22 +59,24 @@ func EditFile(fileName, path string) {
 	}
 }
 
-func CreateFile(fileName, path string) {
+func CreateFile(fileName, path string) (string, string, error) {
 	if _, pathErr := os.Stat(path); pathErr != nil {
 		if os.IsNotExist(pathErr) {
-			fmt.Printf("Error: %s", pathErr)
+			return fileName, path, pathErr
 		}
-	} else {
-		os.Chmod(path, 0700)
-		os.Create(path + "/" + fileName)
 	}
+
+	os.Chmod(path, 0700)
+	os.Create(path + "/" + fileName)
+	return fileName, path, nil
 }
 
-func CreateDirectory(path string) {
+func CreateDirectory(path string) (string, error) {
 	if _, pathErr := os.Stat(path); pathErr != nil {
 		if os.IsNotExist(pathErr) {
-			fmt.Printf("Error: %s", pathErr)
 			os.Mkdir(path, 0700)
 		}
+		return path, pathErr
 	}
+	return path, nil
 }
