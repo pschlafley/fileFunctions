@@ -1,4 +1,4 @@
-package fileFunctions
+package main
 
 import (
 	"io/fs"
@@ -69,4 +69,9 @@ func CreateDirectory(path string) (string, error) {
 		return path, pathErr
 	}
 	return path, nil
+}
+
+func DeleteFile(fileName, path string) (string, error) {
+	os.Remove(path + "/" + fileName)
+	return "", nil
 }
