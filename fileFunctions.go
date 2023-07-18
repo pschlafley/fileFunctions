@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -8,12 +9,10 @@ import (
 )
 
 func main() {
-	fileWasFound, fileName, path, errors := FindFile("test.txt", "./test")
+	fileWasFound, fileName, path, _ := FindFile("test.txt", "./test")
 
-	if errors != nil {
-		CreateDirectory(path)
-	} else if !fileWasFound {
-		CreateFile(fileName, path)
+	if fileWasFound {
+		DeleteFile(fileName, path)
 	}
 }
 
@@ -44,6 +43,10 @@ func FindFile(fileName, path string) (bool, string, string, []string) {
 		} else if data[i] != fileName {
 			fileWasFound = false
 		}
+	}
+
+	if fileWasFound {
+		fmt.Printf("%v was found at %v", fileName, path)
 	}
 
 	return fileWasFound, fileName, path, errors
@@ -79,4 +82,9 @@ func CreateDirectory(path string) (string, error) {
 		return path, pathErr
 	}
 	return path, nil
+}
+
+func DeleteFile(fileName, path string) (string, error) {
+	os.Remove(path + "/" + fileName)
+	return "", nil
 }
