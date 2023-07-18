@@ -1,4 +1,4 @@
-package main
+package fileFunctions
 
 import (
 	"io/fs"
